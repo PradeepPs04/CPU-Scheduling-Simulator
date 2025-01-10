@@ -9,6 +9,7 @@ import os
 from styles import configure_styles
 configure_styles()
 
+"""Main function"""
 def run_priority_simulation(arrival, burst, priority):
     priority_window = Toplevel()
     priority_window.title("Priority Simulator")
