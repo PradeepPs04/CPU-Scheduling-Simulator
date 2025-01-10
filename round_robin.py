@@ -4,6 +4,7 @@ from PIL import Image, ImageTk
 import time
 import os
 
+"""Main function"""
 def run_round_robin_simulation(arrival, burst, quantum):
     rr_window = Toplevel()
     rr_window.title("Round Robin Simulator")
