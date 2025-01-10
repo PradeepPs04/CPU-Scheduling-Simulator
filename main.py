@@ -1,3 +1,9 @@
+"""
+♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥
+♥                                     Edit footer in the last line                                                     ♥
+♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥
+"""
+
 """Importing required modules"""
 from tkinter import *
 from PIL import Image, ImageTk
@@ -11,25 +17,26 @@ from srtf import run_srtf_simulation
 from priority import run_priority_simulation
 from round_robin import run_round_robin_simulation
 
-############## using root = Tk() giving error ??? #########
+
 root = Toplevel()
 root.title("CPU Scheduling Simulator")
 root.geometry("900x750")
 root.resizable(False, False)
 
+# icon and background image
 current_directory = os.path.dirname(os.path.abspath(__file__))
 root.iconbitmap(os.path.join(current_directory, "assets", "icon.ico"))
-
-# loading background image to window
 main_bg_image = ImageTk.PhotoImage(Image.open(os.path.join(current_directory, "assets", "main_background.jpeg")).resize((1000, 750)))
 
-# Create a Canvas for the background and widgets
+# canvas for background and widgets
 canvas = Canvas(root, width=900, height=750)
 canvas.pack(fill="both", expand=True)
 
-# Add the background image
+# adding background image
 canvas.create_image(0, 0, image=main_bg_image, anchor="nw")
 
+
+"""designing headings and choices inputs"""
 # adding headings
 canvas.create_text(480, 50, text="CPU Scheduling", font=("Courier", 35, "bold"), fill="white")
 canvas.create_text(480, 100, text="Simulator", font=("Courier", 25, "italic"), fill="white")
@@ -62,16 +69,17 @@ canvas.create_window(550, 250, window=process_dropdown_menu, anchor="w")
 
 
 """Global Variables"""
-start_simulation_btn = None # will be used to remove previous simulation button to create new again
+# will be used to remove previous (buttons, widgets) to insert new values
+start_simulation_btn = None
 progress_widgets = []
 arrival_entries = []
 burst_entries = []
 priority_entries = []
 time_quantum_entry = None
 
-
-# start process simulation
+""""function to start simulation"""
 def start_simulation():
+    # handling input related erros
     for entry in arrival_entries + burst_entries:
         if not entry.get().strip():  # Empty or whitespace
             show_error_window("Please fill all input fields.")
@@ -83,20 +91,30 @@ def start_simulation():
             show_error_window("Please enter valid integers in all fields.")
             return
 
-
+    # call simulation function according to selected algorithm
     algo_name = algo_selected_option.get()
     if algo_name == "FCFS":
         run_fcfs_simulation(arrival_times, burst_times)
+
     elif algo_name == "SJF":
         run_sjf_simulation(arrival_times, burst_times)
+
     elif algo_name == "SRTF":
         run_srtf_simulation(arrival_times, burst_times)
+
     elif algo_name == "Round Robin":
+        # handling time quantum input related errors
         if time_quantum_entry == None or not time_quantum_entry.get().strip():
             show_error_window("Please fill all input fields.")
             return
-        run_round_robin_simulation(arrival_times, burst_times, int(time_quantum_entry.get()))
+        try:
+            run_round_robin_simulation(arrival_times, burst_times, int(time_quantum_entry.get()))
+        except ValueError:
+            show_error_window("Please enter valid integers in all fields.")
+            return
+
     else:
+        # handling priority input related error
         for entry in priority_entries:
             if not entry.get().strip():  # Empty or whitespace
                 show_error_window("Please fill all input fields.")
@@ -108,6 +126,8 @@ def start_simulation():
                 return
         run_priority_simulation(arrival_times, burst_times, priority)
 
+
+"""designing process input fields"""
 # creating input fields according to algorithm and no of processes
 def create_start_simulation_btn(xPos, yPos):
     global start_simulation_btn
@@ -119,6 +139,7 @@ def create_start_simulation_btn(xPos, yPos):
     start_simulation_btn = Button(root, text="Start Simulation", font=("Aerial", 14), bg="green", fg="white", command=start_simulation)
     canvas.create_window(xPos, yPos, window=start_simulation_btn, anchor="center")
 
+# destroys all previous buttons and widgets
 def destroy_widgets():
     for widget in progress_widgets:
         widget.destroy()
@@ -131,6 +152,7 @@ def destroy_widgets():
     for widget in priority_entries:
         widget.destroy()
 
+# priority inputs required extra field for priority input
 def create_prirority_input(num_processes):
     global arrival_entries
     global burst_entries
@@ -148,7 +170,7 @@ def create_prirority_input(num_processes):
     # creating input boxes for each row
     for i in range(num_processes):
         # process name
-        process_label = Label(root, text=f"P{i + 1}", font=("Arial", 12), bg="lightgray")
+        process_label = Label(root, text=f"P{i}", font=("Arial", 12), bg="lightgray")
         canvas.create_window(200, 450 + i * 40, window=process_label, anchor="center")
         progress_widgets.append(process_label)
 
@@ -167,6 +189,7 @@ def create_prirority_input(num_processes):
         canvas.create_window(730, 450 + i*40, window=priority_entry, anchor="center")
         priority_entries.append(priority_entry)
 
+# creating input fileds for arrival and burst time
 def create_input_fields():
     global arrival_entries
     global burst_entries
@@ -186,8 +209,9 @@ def create_input_fields():
     arrival_entries.clear()
     burst_entries.clear()
 
+    
     if algo_name == "Priority":
-        create_prirority_input(num_processes)
+        create_prirority_input(num_processes) # handle priority scheduling inputs 
     else:
         # creating table headings
         canvas.create_text(290, 400, text="Process", font=("Arial", 14, "bold"), fill="white", anchor="center", tags="text_labels")
@@ -197,7 +221,7 @@ def create_input_fields():
         # creating input boxes for each row
         for i in range(num_processes):
             # process name
-            process_label = Label(root, text=f"P{i + 1}", font=("Arial", 12), bg="lightgray")
+            process_label = Label(root, text=f"P{i}", font=("Arial", 12), bg="lightgray")
             canvas.create_window(290, 450 + i * 40, window=process_label, anchor="center")
             progress_widgets.append(process_label)
 
@@ -211,7 +235,7 @@ def create_input_fields():
             canvas.create_window(640, 450 + i*40, window=burst_entry, anchor="center")
             burst_entries.append(burst_entry)
     
-
+    # time quantum input for round robin scheduling
     if algo_name == "Round Robin":
         xPos = 450
         yPos = 450 + num_processes*40
@@ -236,6 +260,7 @@ create_input_btn = Button(root, text="Confirm Selection", font=("Arial", 14), bg
 canvas.create_window(500, 310, window=create_input_btn, anchor="center")
 
 
+# ♥♥♥♥♥♥♥♥♥♥♥♥♥♥♥
+canvas.create_text(150, 720, text="Made by: Pradeep Singh ♥", font=("Courier", 15, "bold", "italic", "underline"), fill="orange")
 
-canvas.create_text(150, 720, text="Made by: Pradeep Singh", font=("Courier", 15, "bold", "italic", "underline"), fill="orange")
 root.mainloop()
