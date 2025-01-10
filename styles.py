@@ -3,13 +3,13 @@ from tkinter import ttk
 def configure_styles():
     style = ttk.Style()
 
-    # Set theme
+    # set theme
     style.theme_use("default")
 
-    # Style for text labels
+    # style for text labels
     style.configure("Custom.TLabel", background="lightgray", font=("Arial", 12))
 
-    # Style for Start Button
+    # style for Start Button
     style.configure(
         "Start.TButton",
         background="green",
@@ -25,7 +25,7 @@ def configure_styles():
         foreground=[("active", "white")]
     )
 
-    # Style for Exit Button
+    # style for Exit Button
     style.configure(
         "Exit.TButton",
         background="red",
@@ -41,6 +41,7 @@ def configure_styles():
         foreground=[("active", "white")]
     )
 
+    # style for Progress bar
     style.configure(
         "Custom.Horizontal.TProgressbar",
         troughcolor="white",  
