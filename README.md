@@ -8,5 +8,6 @@ This project simulates various CPU scheduling algorithms, including:
   - Priority Scheduling
   - Round Robin
 
-### Install Required Libraries
-    pip install tkinter pillow  
+### Required Libraries
+  - tkinter
+  - pillow
